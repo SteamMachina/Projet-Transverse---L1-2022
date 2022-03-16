@@ -4,11 +4,11 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.velocity = 4
-        self.image = pygame.image.load('assets/player_walking_frames/walk1.png')
+        self.velocity = 10
+        self.image = pygame.image.load('assets/player_walking_frames/right/walk1.png')
         self.rect = self.image.get_rect()
         self.rect.x = 100
-        self.rect.y = 362
+        self.rect.y = 435
 
     def move_right(self):
         # vitesse du joueur
