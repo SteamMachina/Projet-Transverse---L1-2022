@@ -4,8 +4,15 @@ import time
 
 pygame.init()
 
-screen = pygame.display.set_mode((1080, 720))
+##############
+# parameters #
+##############
+screen_width = 1080
+screen_height = 720
+
+screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Animation')
+
 
 WHITE = (255, 255, 255)
 move_right = False
@@ -65,17 +72,23 @@ while running:
     draw_game()
 
     # verify if the player wants to go left or right
-    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x < 900:
+    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= screen_width:
         game.player.move_right()
         move_right = True
         move_left = False
-    elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
+    elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x >= 0:
         game.player.move_left()
         move_right = False
         move_left = True
-    else:
+    elif game.pressed.get(pygame.K_RIGHT) and game.player.rect.x > screen_width:
+        game.player.init_next()
+        move_right = True
+        move_left = False
+    elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x < 0:
+        game.player.init_previous()
         move_right = False
         move_left = False
+    else:
         stepIndex = 0
 
     # update our screen
