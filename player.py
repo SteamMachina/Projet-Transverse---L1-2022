@@ -11,8 +11,8 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.velocity = 13
-        self.image = pygame.image.load('assets/player_walking_frames/walk1.png')
+        self.velocity = 10
+        self.image = pygame.image.load('assets/player_resting_frames/rest1.png')
         self.rect = self.image.get_rect()
         self.rect.x = 100
         self.rect.y = 362
