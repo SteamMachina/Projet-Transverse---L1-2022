@@ -12,6 +12,7 @@ move_right = False
 move_left = False
 # Allow us to know at which walking frame the player is
 stepIndex = 0
+background = pygame.image.load('assets/Levels/Level 1/level1 - first.png')
 
 # Load images of the characters
 player_stationary = pygame.image.load('assets/player_walking_frames/right/walk1.png')
@@ -37,8 +38,7 @@ left = [pygame.image.load('assets/player_walking_frames/left/walk1.png'),
 # Blit allows us to draw the png pictures onto the player's assigned ppsition
 def draw_game():
     global stepIndex
-    screen.fill(WHITE)
-    pygame.draw.line(screen, (0, 0, 0), (0, 600), (1080, 600), 5)
+    screen.blit(background, (0,0))
     # If the player already went through all 8 walking frames, we reset it to 0
     if stepIndex >= 8:
         stepIndex = 0
@@ -77,7 +77,6 @@ while running:
         move_right = False
         move_left = False
         stepIndex = 0
-
 
     # update our screen
     pygame.display.flip()
