@@ -73,10 +73,6 @@ while running:
         game.player.move_left()
         move_right = False
         move_left = True
-    elif game.pressed.get(pygame.K_SPACE):
-        game.player.jump()
-    elif game.pressed.get(pygame.K_UP):
-        game.player.move_up()
     else:
         move_right = False
         move_left = False
