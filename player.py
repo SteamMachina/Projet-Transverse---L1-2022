@@ -1,5 +1,6 @@
 import pygame
-
+import math
+import time
 class Player(pygame.sprite.Sprite):
 
     def __init__(self):
@@ -16,3 +17,8 @@ class Player(pygame.sprite.Sprite):
 
     def move_left(self):
         self.rect.x -= self.velocity
+
+    def move_up(self):
+
+        self.rect.y -= 1/2*( self.rect.x/ (self.velocity*math.cos(90))**2)
+

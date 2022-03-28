@@ -30,6 +30,8 @@ while running:
         game.player.move_right()
     elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
         game.player.move_left()
+    elif game.pressed.get(pygame.K_UP):
+        game.player.move_up()
 
     # update our screen
     pygame.display.flip()
