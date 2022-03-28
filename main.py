@@ -71,19 +71,17 @@ while running:
         move_left = False
     elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x > 0:
         game.player.move_left()
-<<<<<<< HEAD
         move_right = False
         move_left = True
     elif game.pressed.get(pygame.K_SPACE):
         game.player.jump()
+    elif game.pressed.get(pygame.K_UP):
+        game.player.move_up()
     else:
         move_right = False
         move_left = False
         stepIndex = 0
-=======
-    elif game.pressed.get(pygame.K_UP):
-        game.player.move_up()
->>>>>>> origin/main
+
 
     # update our screen
     pygame.display.flip()
