@@ -1,79 +1,78 @@
 import pygame
 from game import Game
-import time
+import settings as set
+from animations import *
 
 pygame.init()
 
-##############
-# parameters #
-##############
-screen_width = 1080
-screen_height = 720
+screen = pygame.display.set_mode((set.screen_width, set.screen_height))
+pygame.display.set_caption('Super Plush Rescue')
 
-screen = pygame.display.set_mode((screen_width, screen_height))
-pygame.display.set_caption('Animation')
+'''Allow us to know if the boomerang is on the left. If it is, the game know 
+that the boomerang needs to rebounce to the right'''
+boomerang_on_left = False
 
+# Allow us to know at which  frame the rotation of the boomerang is
+boomerang_rotation_index = 0
 
-WHITE = (255, 255, 255)
-move_right = False
-move_left = False
 # Allow us to know at which walking frame the player is
 stepIndex = 0
-
-background_index = 0
-background = [pygame.image.load('assets/Levels/Level 1/level1 - first.png'),
-              pygame.image.load('assets/Levels/Level 1/level1 - second.png'),
-              pygame.image.load('assets/Levels/Level 1/level1 - third.png'),
-              pygame.image.load('assets/Levels/Level 1/level1 - fourth.png')]
-
-player_stationary = pygame.image.load('assets/player_walking_frames/right/walk1.png')
-
-right = [pygame.image.load('assets/player_walking_frames/right/walk1.png'),
-         pygame.image.load('assets/player_walking_frames/right/walk2.png'),
-         pygame.image.load('assets/player_walking_frames/right/walk3.png'),
-         pygame.image.load('assets/player_walking_frames/right/walk4.png'),
-         pygame.image.load('assets/player_walking_frames/right/walk5.png'),
-         pygame.image.load('assets/player_walking_frames/right/walk6.png'),
-         pygame.image.load('assets/player_walking_frames/right/walk7.png'),
-         pygame.image.load('assets/player_walking_frames/right/walk8.png')]
-
-left = [pygame.image.load('assets/player_walking_frames/left/walk1.png'),
-        pygame.image.load('assets/player_walking_frames/left/walk2.png'),
-        pygame.image.load('assets/player_walking_frames/left/walk3.png'),
-        pygame.image.load('assets/player_walking_frames/left/walk4.png'),
-        pygame.image.load('assets/player_walking_frames/left/walk5.png'),
-        pygame.image.load('assets/player_walking_frames/left/walk6.png'),
-        pygame.image.load('assets/player_walking_frames/left/walk7.png'),
-        pygame.image.load('assets/player_walking_frames/left/walk8.png')]
-
-resting = [pygame.image.load('assets/player_resting_frames/rest1.png'),
-        pygame.image.load('assets/player_resting_frames/rest2.png'),
-        pygame.image.load('assets/player_resting_frames/rest1.png'),
-        pygame.image.load('assets/player_resting_frames/rest2.png'),
-        pygame.image.load('assets/player_resting_frames/rest1.png'),
-        pygame.image.load('assets/player_resting_frames/rest2.png')]
 
 # Blit allows us to draw the png pictures onto the player's assigned ppsition
 def draw_game():
     global stepIndex
-    screen.blit(background[background_index], (0, 0))
+    global boomerang_on_left
+    global boomerang_rotation_index
+
+    # We apply the image of the current background that the character is on the screen
+    screen.blit(background[set.Level1_background_index], (0, 0))
+
+    # We configure how each sub-level 1 of level 1 is going to be
+    if set.Level1_background_index == 0:
+
+        if (not game.pressed.get(pygame.K_t)) and (
+                game.boomerang.rect.x > 0) and game.boomerang.rect.x != set.hidden_object_space and boomerang_on_left == False:
+            game.boomerang.moves_left()
+
+            if game.boomerang.rect.x == 0:
+                boomerang_on_left = True
+
+        elif (not game.pressed.get(pygame.K_t)) and (game.boomerang.rect.x != set.hidden_object_space) and (
+                boomerang_on_left == True) and game.boomerang.rect.x <= set.screen_width:
+            game.boomerang.moves_right()
+
+            if game.boomerang.rect.x == set.screen_width:
+                boomerang_on_left = False
+        else:
+            game.boomerang.rect.x = set.hidden_object_space
+
+        # If the player already went through all 8 walking frames, we reset it to 0
+        if boomerang_rotation_index >= 5:
+            boomerang_rotation_index = 0
+        # If player goes right, we go through the right list walking frames
+        elif boomerang_on_left == False:
+            screen.blit(boomerang_rotation[boomerang_rotation_index],
+                        (game.boomerang.rect.x, game.boomerang.rect.y))
+            boomerang_rotation_index += 1
+        elif boomerang_on_left == True:
+            screen.blit(boomerang_rotation[boomerang_rotation_index],
+                        (game.boomerang.rect.x, game.boomerang.rect.y))
+            boomerang_rotation_index += 1
+
     # If the player already went through all 8 walking frames, we reset it to 0
-    if stepIndex >= 8:
+    if stepIndex >= 16:
         stepIndex = 0
     # If player goes right, we go through the right list walking frames
-    elif move_right:
+    elif game.player.IsmovingRight:
         screen.blit(right[stepIndex], (game.player.rect.x, game.player.rect.y))
-        time.sleep(0.05)
         stepIndex += 1
     # If player goes right, we go through the left list walking frames
-    elif move_left:
+    elif game.player.IsmovingLeft:
         screen.blit(left[stepIndex], (game.player.rect.x, game.player.rect.y))
-        time.sleep(0.06)
         stepIndex += 1
     # If the player neither goes left or right, we just apply the stationary frame to it
     else:
-        screen.blit(player_stationary, (game.player.rect.x, game.player.rect.y))
-
+        screen.blit(game.player.image, (game.player.rect.x, game.player.rect.y))
 
 
 # load our game
@@ -84,25 +83,32 @@ while running:
     draw_game()
 
     # verify if the player wants to go left or right
-    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= screen_width:
+    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= set.screen_width:
+
+        # Control the moment that if the player presses shift, he can run
         if game.pressed.get(pygame.K_LSHIFT):
-            game.player.move_right_fast()
+            game.player.move_right(game.player.velocity_fast)
         else:
-            game.player.move_right()
-        move_right = True
-        move_left = False
+            game.player.move_right(game.player.velocity)
+        game.player.IsmovingRight = True
+        game.player.IsmovingLeft = False
+
     elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x >= 0:
+
+        # Control the moment that if the player presses shift, he can run
         if game.pressed.get(pygame.K_LSHIFT):
-            game.player.move_left_fast()
+            game.player.move_left(game.player.velocity_fast)
         else:
-            game.player.move_left()
-        move_right = False
-        move_left = True
-    elif game.pressed.get(pygame.K_RIGHT) and game.player.rect.x > screen_width:
+            game.player.move_left(game.player.velocity)
+
+        game.player.IsmovingRight = False
+        game.player.IsmovingLeft = True
+
+    elif game.pressed.get(pygame.K_RIGHT) and game.player.rect.x > set.screen_width:
         game.player.init_next()
-        move_right = True
-        move_left = False
-        background_index += 1
+        game.player.IsmovingRight = True
+        game.player.IsmovingLeft = False
+        set.Level1_background_index += 1
     else:
         stepIndex = 0
 
