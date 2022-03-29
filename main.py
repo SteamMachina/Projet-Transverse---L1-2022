@@ -85,11 +85,17 @@ while running:
 
     # verify if the player wants to go left or right
     if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= screen_width:
-        game.player.move_right()
+        if game.pressed.get(pygame.K_LSHIFT):
+            game.player.move_right_fast()
+        else:
+            game.player.move_right()
         move_right = True
         move_left = False
     elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x >= 0:
-        game.player.move_left()
+        if game.pressed.get(pygame.K_LSHIFT):
+            game.player.move_left_fast()
+        else:
+            game.player.move_left()
         move_right = False
         move_left = True
     elif game.pressed.get(pygame.K_RIGHT) and game.player.rect.x > screen_width:
