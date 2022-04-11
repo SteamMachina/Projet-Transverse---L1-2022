@@ -1,9 +1,10 @@
 import pygame
 
-background = [pygame.image.load('assets/Levels/Level 1/level1 - first.png'),
-              pygame.image.load('assets/Levels/Level 1/level1 - second.png'),
-              pygame.image.load('assets/Levels/Level 1/level1 - third.png'),
-              pygame.image.load('assets/Levels/Level 1/level1 - fourth.png')]
+background = [pygame.image.load('assets/Levels/niv1_1.png'),
+              pygame.image.load('assets/Levels/niv1_2.png'),
+              pygame.image.load('assets/Levels/niv1_3.png'),
+              pygame.image.load('assets/Levels/niv2_1.png'), 
+              pygame.image.load('assets/Levels/niv2_2.png')]
 
 right = [pygame.image.load('assets/player_walking_frames/right/walk1.png'),
          pygame.image.load('assets/player_walking_frames/right/walk1.png'),
