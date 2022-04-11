@@ -17,4 +17,5 @@ that the boomerang needs to rebounce to the right'''
 boomerang_on_left = False
 
 # Allow us to know at which frame the background of Level 1 of the boomerang is
-Level1_background_index = 0
+background_index = 0
+max_background_index = 4

@@ -2,6 +2,7 @@ import pygame
 from game import Game
 import settings as set
 from animations import *
+import time
 
 pygame.init()
 
@@ -25,10 +26,10 @@ def draw_game():
     global boomerang_rotation_index
 
     # We apply the image of the current background that the character is on the screen
-    screen.blit(background[set.Level1_background_index], (0, 0))
+    screen.blit(background[set.background_index], (0, 0))
 
     # We configure how each sub-level 1 of level 1 is going to be
-    if set.Level1_background_index == 0:
+    if set.background_index == 0:
 
         if (not game.pressed.get(pygame.K_t)) and (
                 game.boomerang.rect.x > 0) and game.boomerang.rect.x != set.hidden_object_space and boomerang_on_left == False:
@@ -66,10 +67,12 @@ def draw_game():
     elif game.player.IsmovingRight:
         screen.blit(right[stepIndex], (game.player.rect.x, game.player.rect.y))
         stepIndex += 1
+        time.sleep(0.01)
     # If player goes right, we go through the left list walking frames
     elif game.player.IsmovingLeft:
         screen.blit(left[stepIndex], (game.player.rect.x, game.player.rect.y))
         stepIndex += 1
+        time.sleep(0.01)
     # If the player neither goes left or right, we just apply the stationary frame to it
     else:
         screen.blit(game.player.image, (game.player.rect.x, game.player.rect.y))
@@ -104,12 +107,14 @@ while running:
         game.player.IsmovingRight = False
         game.player.IsmovingLeft = True
 
-    elif game.pressed.get(pygame.K_RIGHT) and game.player.rect.x > set.screen_width:
+    elif (game.pressed.get(pygame.K_RIGHT)) and (game.player.rect.x > set.screen_width) and (set.background_index < set.max_background_index):
         game.player.init_next()
         game.player.IsmovingRight = True
         game.player.IsmovingLeft = False
-        set.Level1_background_index += 1
+        set.background_index += 1
     else:
+        game.player.IsmovingRight = False
+        game.player.IsmovingLeft = False
         stepIndex = 0
 
     # update our screen

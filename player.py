@@ -11,17 +11,17 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.velocity = 5
-        self.velocity_fast = 20
+        self.velocity = 4
+        self.velocity_fast = 1
         self.image = pygame.image.load('assets/player_walking_frames/right/walk1.png')
         self.rect = self.image.get_rect()
         self.rect.x = 100
-        self.rect.y = 362
+        self.rect.y = 370
 
         '''PLAYER MOVEMENT'''
         self.rect = self.image.get_rect()
         self.rect.x = 100
-        self.rect.y = 362
+        self.rect.y = 370
 
         '''BOOLEAN '''
         # Boolean that will indicate if the player is currently moving right or left
