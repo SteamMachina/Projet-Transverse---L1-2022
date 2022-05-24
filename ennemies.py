@@ -1,6 +1,6 @@
 import pygame
 
-
+'''
 # The class of the Continuous boomerang in the third frame
 # The boomerang can't be caught, nor destroy
 class Boomerang(pygame.sprite.Sprite):
@@ -19,6 +19,6 @@ class Boomerang(pygame.sprite.Sprite):
         self.rect.x += self.velocity
 
     def moves_left(self):
-        self.rect.x -= self.velocity
+        self.rect.x -= self.velocity'''
 
 

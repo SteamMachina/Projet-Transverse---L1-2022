@@ -1,7 +1,9 @@
+import pygame
 
 ##############
 # parameters #
 ##############
+
 screen_width = 1080
 screen_height = 720
 
