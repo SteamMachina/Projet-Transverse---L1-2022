@@ -1,6 +1,8 @@
 import pygame
+from pygame.time import Clock
+
 from game import Game
-import settings as set
+import settings as settings
 # We import the mixer module of pygame which allows to have sounds
 from pygame import mixer
 import random
@@ -8,13 +10,15 @@ import random
 from animations import *
 import time
 
+clock = Clock()
+
 '''INIT -------------------------------------------- '''
 pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()
 pygame.init()
 
 
-screen = pygame.display.set_mode((set.screen_width, set.screen_height))
+screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
 pygame.display.set_caption('Super Plush Rescue')
 
 '''VARIABLES -------------------------------------------- '''
@@ -80,20 +84,33 @@ class Button():
 '''BUTTONS --------------------------------------------
 'WE THEN CREATE THOSE BUTTONS WITH OUR PREVIOUS CLASS'''
 
-start_button = Button(400, 278, set.start_image_button)
-rules_button = Button(400, 378, set.rules_image_button)
-credits_button = Button(400, 478, set.credits_image_button)
-exit_button = Button(400, 578, set.exit_image_button)
-return_button = Button(778, 600, set.return_back_button)
+start_button = Button(400, 278, settings.start_image_button)
+rules_button = Button(400, 378, settings.rules_image_button)
+credits_button = Button(400, 478, settings.credits_image_button)
+exit_button = Button(400, 578, settings.exit_image_button)
+return_button = Button(778, 600, settings.return_back_button)
 
-hard_game_difficulty_button = Button(650, 278, set.hard_difficulty_button)
-easy_game_difficulty_button = Button(50, 278, set.easy_difficulty_button)
+hard_game_difficulty_button = Button(650, 278, settings.hard_difficulty_button)
+easy_game_difficulty_button = Button(50, 278, settings.easy_difficulty_button)
 
 '''FUNCTIONS -------------------------------------------- '''
+small_font = pygame.font.Font("freesansbold.ttf", 25)
+medium_font = pygame.font.Font("freesansbold.ttf", 50)
+big_font = pygame.font.Font("freesansbold.ttf", 80)
 
-def Add_text_to_screen(text,color):
-    screen_text = set.font.render(text,True,color)
-    screen.blit(screen_text,[set.screen_width/2, set.screen_height/2])
+
+def Add_text_to_screen(msg, color, x, y, size):
+    font = small_font
+    if size == "small":
+        font = small_font
+    elif size == "medium":
+        font = medium_font
+    elif size == "big":
+        font = big_font
+
+    text = font.render(msg, True, color)
+    screen.blit(text, (x, y))
+
 
 def pause_function():
     paused = True
@@ -104,17 +121,19 @@ def pause_function():
                 pygame.quit()
                 quit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_p:
+                if event.key == pygame.K_c:
                     paused = False
+                    draw_game(level_difficulty, level_choice_number)
+                    game_loop()
                 elif event.key == pygame.K_q:
                     pygame.quit()
                     quit()
-        screen.fill(set.white)
-        # -100 pixels up
-        Add_text_to_screen("Paused",set.black,-100,size="large")
-        Add_text_to_screen("Press P to continue or Q to quit.",black,25)
-        pygame.display.updaate()
+        screen.fill(settings.white)
+        Add_text_to_screen("Paused", settings.black, 400, 200, "big")
+        Add_text_to_screen("Press C to continue or Q to quit.", settings.blue, 200, 400, "medium")
+        pygame.display.update()
         clock.tick(5)
+
 # Blit allows us to draw the png pictures onto the player's assigned position
 def draw_game(difficulty, level_number):
     global stepIndex
@@ -143,16 +162,49 @@ def draw_game(difficulty, level_number):
         screen.blit(game.player.image, (game.player.rect.x, game.player.rect.y))
 
 
+def game_loop():
+    # verify if the player wants to go left or right
+    if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= settings.screen_width:
+
+        # Control the moment that if the player presses shift, he can run
+        if game.pressed.get(pygame.K_LSHIFT):
+            game.player.move_right(game.player.velocity_fast)
+        else:
+            game.player.move_right(game.player.velocity)
+        game.player.IsmovingRight = True
+        game.player.IsmovingLeft = False
+
+    elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x >= 0:
+
+        # Control the moment that if the player presses shift, he can run
+        if game.pressed.get(pygame.K_LSHIFT):
+            game.player.move_left(game.player.velocity_fast)
+        else:
+            game.player.move_left(game.player.velocity)
+
+        game.player.IsmovingRight = False
+        game.player.IsmovingLeft = True
+
+    elif (game.pressed.get(pygame.K_RIGHT)) and (game.player.rect.x > settings.screen_width):
+        game.player.init_next()
+        game.player.IsmovingRight = True
+        game.player.IsmovingLeft = False
+    else:
+        game.player.IsmovingRight = False
+        game.player.IsmovingLeft = False
+        stepIndex = 0
+
+
 # load our game
 game = Game()
 
 while running:
-    screen.blit(set.side_left_bg_starter_menu, (0, 0))
+    screen.blit(settings.side_left_bg_starter_menu, (0, 0))
     # We will load the button and main menu thingy when main menu is true, else we load the game
     if main_menu:
         # We apply the background image of the starter menu
-        screen.blit(set.side_right_bg_starter_menu, (500, 0))
-        screen.blit(set.game_logo, (340, 50))
+        screen.blit(settings.side_right_bg_starter_menu, (500, 0))
+        screen.blit(settings.game_logo, (340, 50))
 
         if start_button.draw():
             difficulty_menu = True
@@ -169,8 +221,8 @@ while running:
             running = False
 
     if difficulty_menu:
-        screen.blit(set.side_left_bg_starter_menu, (0, 0))
-        screen.blit(set.side_right_bg_starter_menu, (500, 0))
+        screen.blit(settings.side_left_bg_starter_menu, (0, 0))
+        screen.blit(settings.side_right_bg_starter_menu, (500, 0))
         return_button.draw()
         if hard_game_difficulty_button.draw():
             level_difficulty = "Hard"
@@ -185,14 +237,14 @@ while running:
             main_menu = True
 
     if rules_menu:
-        screen.blit(set.rules_menu_image, (0, 0))
+        screen.blit(settings.rules_menu_image, (0, 0))
         return_button.draw()
         if return_button.draw():
             rules_menu = False
             main_menu = True
 
     if credits_menu:
-        screen.blit(set.rules_menu_image, (0, 0))
+        screen.blit(settings.rules_menu_image, (0, 0))
         return_button.draw()
         if return_button.draw():
             credits_menu = False
@@ -200,36 +252,8 @@ while running:
 
     if not main_menu:
         draw_game(level_difficulty, level_choice_number)
-        # verify if the player wants to go left or right
-        if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= set.screen_width:
+        game_loop()
 
-            # Control the moment that if the player presses shift, he can run
-            if game.pressed.get(pygame.K_LSHIFT):
-                game.player.move_right(game.player.velocity_fast)
-            else:
-                game.player.move_right(game.player.velocity)
-            game.player.IsmovingRight = True
-            game.player.IsmovingLeft = False
-
-        elif game.pressed.get(pygame.K_LEFT) and game.player.rect.x >= 0:
-
-            # Control the moment that if the player presses shift, he can run
-            if game.pressed.get(pygame.K_LSHIFT):
-                game.player.move_left(game.player.velocity_fast)
-            else:
-                game.player.move_left(game.player.velocity)
-
-            game.player.IsmovingRight = False
-            game.player.IsmovingLeft = True
-
-        elif (game.pressed.get(pygame.K_RIGHT)) and (game.player.rect.x > set.screen_width):
-            game.player.init_next()
-            game.player.IsmovingRight = True
-            game.player.IsmovingLeft = False
-        else:
-            game.player.IsmovingRight = False
-            game.player.IsmovingLeft = False
-            stepIndex = 0
         # update our screen
     pygame.display.flip()
 
@@ -240,6 +264,8 @@ while running:
             pygame.quit()
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
+            if (event.key == pygame.K_p) and (main_menu == False) :
+                pause_function()
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False
