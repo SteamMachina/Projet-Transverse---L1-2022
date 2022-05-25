@@ -17,7 +17,6 @@ pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()
 pygame.init()
 
-
 screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
 pygame.display.set_caption('Super Plush Rescue')
 
@@ -29,9 +28,11 @@ main_menu = True
 rules_menu = False
 credits_menu = False
 running = True
+paused = False
+# Nbr of seconds since the beginning of the next epic
+start_time = time.time()
 difficulty_menu = False
 level_difficulty = "Nothing"
-
 
 '''SOUNDS -------------------------------------------- '''
 
@@ -112,8 +113,7 @@ def Add_text_to_screen(msg, color, x, y, size):
     screen.blit(text, (x, y))
 
 
-def pause_function():
-    paused = True
+def pause_function(paused):
     while paused:
         for event in pygame.event.get():
             # event is closing of window
@@ -123,8 +123,6 @@ def pause_function():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_c:
                     paused = False
-                    draw_game(level_difficulty, level_choice_number)
-                    game_loop()
                 elif event.key == pygame.K_q:
                     pygame.quit()
                     quit()
@@ -133,6 +131,8 @@ def pause_function():
         Add_text_to_screen("Press C to continue or Q to quit.", settings.blue, 200, 400, "medium")
         pygame.display.update()
         clock.tick(5)
+    return paused
+
 
 # Blit allows us to draw the png pictures onto the player's assigned position
 def draw_game(difficulty, level_number):
@@ -140,7 +140,7 @@ def draw_game(difficulty, level_number):
 
     if difficulty == 'Hard':
         screen.blit(background_hard[level_number], (0, 0))
-        pygame.mixer.music.load('assets/Music/Hard_Levels_Music.mp3')
+
     if difficulty == 'Easy':
         screen.blit(background_easy[level_number], (0, 0))
 
@@ -162,7 +162,8 @@ def draw_game(difficulty, level_number):
         screen.blit(game.player.image, (game.player.rect.x, game.player.rect.y))
 
 
-def game_loop():
+
+def game_loop(main_menu,level_difficulty,paused):
     # verify if the player wants to go left or right
     if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= settings.screen_width:
 
@@ -194,11 +195,14 @@ def game_loop():
         game.player.IsmovingLeft = False
         stepIndex = 0
 
+    return main_menu
+
 
 # load our game
 game = Game()
 
 while running:
+
     screen.blit(settings.side_left_bg_starter_menu, (0, 0))
     # We will load the button and main menu thingy when main menu is true, else we load the game
     if main_menu:
@@ -251,8 +255,9 @@ while running:
             main_menu = True
 
     if not main_menu:
+        pygame.mixer.music.stop()
         draw_game(level_difficulty, level_choice_number)
-        game_loop()
+        main_menu = game_loop(main_menu,level_difficulty,paused)
 
         # update our screen
     pygame.display.flip()
@@ -264,8 +269,9 @@ while running:
             pygame.quit()
         elif event.type == pygame.KEYDOWN:
             game.pressed[event.key] = True
-            if (event.key == pygame.K_p) and (main_menu == False) :
-                pause_function()
+            if (event.key == pygame.K_p) and (main_menu == False) and paused == False:
+                paused = True
+                paused = pause_function(paused)
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False
