@@ -1,10 +1,13 @@
 import pygame
 
-background = [pygame.image.load('old_assets/Levels/niv1_1.png'),
-              pygame.image.load('old_assets/Levels/niv1_2.png'),
-              pygame.image.load('old_assets/Levels/niv1_3.png'),
+background_hard = [pygame.image.load('old_assets/Levels/niv1_2.png'),
               pygame.image.load('old_assets/Levels/niv2_1.png'),
               pygame.image.load('old_assets/Levels/niv2_2.png')]
+
+background_easy = [pygame.image.load('old_assets/Levels/niv1_1.png'),
+              pygame.image.load('old_assets/Levels/niv1_2.png'),
+              pygame.image.load('old_assets/Levels/niv1_3.png')]
+
 
 right = [pygame.image.load('old_assets/player_walking_frames/right/walk1.png'),
          pygame.image.load('old_assets/player_walking_frames/right/walk1.png'),
