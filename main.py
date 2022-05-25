@@ -3,20 +3,21 @@ from game import Game
 import settings as set
 # We import the mixer module of pygame which allows to have sounds
 from pygame import mixer
-
+import random
 # We import the lists that contains the animations of the game
 from animations import *
 import time
 
-pygame.mixer.pre_init(44100,-16,2,512)
+'''INIT -------------------------------------------- '''
+pygame.mixer.pre_init(44100, -16, 2, 512)
 mixer.init()
 pygame.init()
 
+
 screen = pygame.display.set_mode((set.screen_width, set.screen_height))
 pygame.display.set_caption('Super Plush Rescue')
-game_logo = pygame.image.load('assets/menu/logo.png')
 
-'''We declare the variables '''
+'''VARIABLES -------------------------------------------- '''
 
 # Allow us to know at which walking frame the player is
 stepIndex = 0
@@ -24,29 +25,23 @@ main_menu = True
 rules_menu = False
 credits_menu = False
 running = True
-starter_menu_bg_image = pygame.image.load('old_assets/Levels/niv2_2.png')
-rules_menu_image = pygame.image.load('assets/menu/Rules.png')
+difficulty_menu = False
+level_difficulty = "Nothing"
+
+
+'''SOUNDS -------------------------------------------- '''
 
 '''We load the sounds in the game'''
-#game_over_fx = pygame.mixer.Sound('')
-#game_over_fx.set_volume(0.5)
+# game_over_fx = pygame.mixer.Sound('')
+# game_over_fx.set_volume(0.5)
 pygame.mixer.music.load('assets/Music/Game_menu_music.mp3')
 # 5000 : nbr of ms per delay
 pygame.mixer.music.play(-1, 0.0, 5000)
 
-'''We declare the various buttons use in the game (in starter menu)'''
-start_image_button = pygame.image.load('assets/menu/Play_Button.png')
-start_image_button = pygame. transform. scale(start_image_button, (305, 100))
-rules_image_button = pygame.image.load('assets/menu/Rules_button.png')
-rules_image_button = pygame. transform. scale(rules_image_button, (305, 100))
-exit_image_button = pygame.image.load('assets/menu/Quit_Button.png')
-exit_image_button = pygame. transform. scale(exit_image_button, (305, 100))
-return_back_button = pygame.image.load('assets/menu/Return_button.png')
-return_back_button = pygame. transform. scale(return_back_button, (305, 100))
-credits_image_button = pygame.image.load('assets/menu/Credit_Button.png')
-credits_image_button = pygame. transform. scale(credits_image_button, (305, 100))
+'''CLASSES -------------------------------------------- '''
 
 '''A class for the buttons of the game in the starter menu'''
+
 
 class Button():
     # We put an image so that we can change the purpose of buttons at once and not re-create function per buttons
@@ -74,7 +69,7 @@ class Button():
                 has_user_clicked = True
                 self.is_the_button_pressed = True
 
-        if pygame.mouse.get_pressed()[0] == 1 :
+        if pygame.mouse.get_pressed()[0] == 1:
             self.is_the_button_pressed = False
 
         screen.blit(self.image, self.rect)
@@ -82,22 +77,53 @@ class Button():
         return has_user_clicked
 
 
+'''BUTTONS --------------------------------------------
+'WE THEN CREATE THOSE BUTTONS WITH OUR PREVIOUS CLASS'''
 
-'''WE THEN CREATE THOSE BUTTONS WITH OUR PREVIOUS CLASS'''
+start_button = Button(400, 278, set.start_image_button)
+rules_button = Button(400, 378, set.rules_image_button)
+credits_button = Button(400, 478, set.credits_image_button)
+exit_button = Button(400, 578, set.exit_image_button)
+return_button = Button(778, 600, set.return_back_button)
 
-start_button = Button(400, 278, start_image_button)
-rules_button = Button(400, 378, rules_image_button)
-credits_button = Button(400, 478, credits_image_button)
-exit_button = Button(400, 578, exit_image_button)
-return_button = Button(778, 600, return_back_button)
+hard_game_difficulty_button = Button(650, 278, set.hard_difficulty_button)
+easy_game_difficulty_button = Button(50, 278, set.easy_difficulty_button)
 
+'''FUNCTIONS -------------------------------------------- '''
 
-# Blit allows us to draw the png pictures onto the player's assigned ppsition
-def draw_game():
+def Add_text_to_screen(text,color):
+    screen_text = set.font.render(text,True,color)
+    screen.blit(screen_text,[set.screen_width/2, set.screen_height/2])
+
+def pause_function():
+    paused = True
+    while paused:
+        for event in pygame.event.get():
+            # event is closing of window
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_p:
+                    paused = False
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    quit()
+        screen.fill(set.white)
+        # -100 pixels up
+        Add_text_to_screen("Paused",set.black,-100,size="large")
+        Add_text_to_screen("Press P to continue or Q to quit.",black,25)
+        pygame.display.updaate()
+        clock.tick(5)
+# Blit allows us to draw the png pictures onto the player's assigned position
+def draw_game(difficulty, level_number):
     global stepIndex
 
-    # We apply the image of the current background that the character is on the screen
-    screen.blit(background[set.background_index], (0, 0))
+    if difficulty == 'Hard':
+        screen.blit(background_hard[level_number], (0, 0))
+        pygame.mixer.music.load('assets/Music/Hard_Levels_Music.mp3')
+    if difficulty == 'Easy':
+        screen.blit(background_easy[level_number], (0, 0))
 
     # If the player already went through all 8 walking frames, we reset it to 0
     if stepIndex >= 16:
@@ -120,18 +146,16 @@ def draw_game():
 # load our game
 game = Game()
 
-bg = pygame.image.load('old_assets/Levels/niv1_1.png')
-
 while running:
-    screen.blit(bg, (0, 0))
+    screen.blit(set.side_left_bg_starter_menu, (0, 0))
     # We will load the button and main menu thingy when main menu is true, else we load the game
     if main_menu:
         # We apply the background image of the starter menu
-        screen.blit(starter_menu_bg_image, (500, 0))
-        screen.blit(game_logo, (340, 50))
+        screen.blit(set.side_right_bg_starter_menu, (500, 0))
+        screen.blit(set.game_logo, (340, 50))
 
         if start_button.draw():
-            main_menu = False
+            difficulty_menu = True
 
         if rules_button.draw():
             rules_menu = True
@@ -141,27 +165,41 @@ while running:
             credits_menu = True
             main_menu = True
 
-        if exit_button.draw() :
+        if exit_button.draw():
             running = False
 
+    if difficulty_menu:
+        screen.blit(set.side_left_bg_starter_menu, (0, 0))
+        screen.blit(set.side_right_bg_starter_menu, (500, 0))
+        return_button.draw()
+        if hard_game_difficulty_button.draw():
+            level_difficulty = "Hard"
+            level_choice_number = random.randint(0, 2)
+            main_menu = False
+        if easy_game_difficulty_button.draw():
+            level_choice_number = random.randint(0, 2)
+            level_difficulty = 'Easy'
+            main_menu = False
+        if return_button.draw():
+            difficulty_menu = False
+            main_menu = True
+
     if rules_menu:
-        screen.blit(rules_menu_image, (0, 0))
+        screen.blit(set.rules_menu_image, (0, 0))
         return_button.draw()
         if return_button.draw():
             rules_menu = False
             main_menu = True
 
     if credits_menu:
-        screen.blit(rules_menu_image, (0, 0))
+        screen.blit(set.rules_menu_image, (0, 0))
         return_button.draw()
         if return_button.draw():
             credits_menu = False
             main_menu = True
 
-
     if not main_menu:
-        pygame.mixer.music.fadeout(10)
-        draw_game()
+        draw_game(level_difficulty, level_choice_number)
         # verify if the player wants to go left or right
         if game.pressed.get(pygame.K_RIGHT) and game.player.rect.x <= set.screen_width:
 
@@ -184,19 +222,16 @@ while running:
             game.player.IsmovingRight = False
             game.player.IsmovingLeft = True
 
-        elif (game.pressed.get(pygame.K_RIGHT)) and (game.player.rect.x > set.screen_width) and (
-                set.background_index < set.max_background_index):
+        elif (game.pressed.get(pygame.K_RIGHT)) and (game.player.rect.x > set.screen_width):
             game.player.init_next()
             game.player.IsmovingRight = True
             game.player.IsmovingLeft = False
-            set.background_index += 1
         else:
             game.player.IsmovingRight = False
             game.player.IsmovingLeft = False
             stepIndex = 0
         # update our screen
     pygame.display.flip()
-
 
     for event in pygame.event.get():
         # event is closing of window
