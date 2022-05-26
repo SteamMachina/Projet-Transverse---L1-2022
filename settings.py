@@ -1,16 +1,27 @@
 import pygame
+from menu import Button
+pygame.font.init()
 
 ##############
 # parameters #
 ##############
 screen_width = 1080
 screen_height = 720
+
+##############
+# colors #
+##############
 white = (255, 255, 255)
 black = (0, 0, 0)
 yellow = (255, 255, 0)
 red = (255, 0, 0)
 green = (0, 255, 0)
 blue = (0, 0, 255)
+
+'''FONTS -------------------------------------------- '''
+small_font = pygame.font.Font("freesansbold.ttf", 25)
+medium_font = pygame.font.Font("freesansbold.ttf", 50)
+big_font = pygame.font.Font("freesansbold.ttf", 80)
 
 '''IMAGES -------------------------------------------- '''
 
@@ -36,6 +47,18 @@ hard_difficulty_button = pygame.image.load('assets/menu/Hard_Difficulty_Button.p
 hard_difficulty_button = pygame.transform.scale(hard_difficulty_button, (305, 100))
 easy_difficulty_button = pygame.image.load('assets/menu/Easy_Difficulty_Button.png')
 easy_difficulty_button = pygame.transform.scale(easy_difficulty_button, (305, 100))
+
+'''BUTTONS --------------------------------------------
+'WE THEN CREATE THOSE BUTTONS WITH OUR PREVIOUS CLASS'''
+
+start_button = Button(400, 278, start_image_button)
+rules_button = Button(400, 378, rules_image_button)
+credits_button = Button(400, 478, credits_image_button)
+exit_button = Button(400, 578, exit_image_button)
+return_button = Button(778, 600, return_back_button)
+
+hard_game_difficulty_button = Button(650, 278, hard_difficulty_button)
+easy_game_difficulty_button = Button(50, 278, easy_difficulty_button)
 
 
 # We define a position where to hide ennemies after they're killed

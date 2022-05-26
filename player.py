@@ -1,6 +1,7 @@
 import pygame
 
-class Player(pygame.sprite.Sprite):
+
+class Player():
 
     def __init__(self):
         super().__init__()
@@ -9,32 +10,55 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 20
         self.rect.y = 20
+        self.yoke_velocity = 19
+        self.yoke_rect = self.image.get_rect()
+        self.yoke_rect.x = 100
+        self.yoke_rect.y = 370
         self.position = pygame.math.Vector2(0, 0)
         self.velocity = pygame.math.Vector2(0, 0)
         self.acceleration = pygame.math.Vector2(0, 0.4)
 
+        '''BOOLEAN '''
+        # Boolean that will indicate if the player is currently moving right or left
+        self.IsmovingRight = False
+        self.IsmovingLeft = False
+
         self.jump = False
         self.on_ground = False
 
-        self.stepIndex = 0
+        #self.stepIndex = 0
 
+    def move_right(self, velocity):
+        # vitesse du joueur
+        self.yoke_rect.x += velocity
 
-    #main function that calls the others
+    def move_left(self, velocity):
+        self.yoke_rect.x -= velocity
+
+    # main function that calls the others
     def movements(self, game, delta_time):
         self.mov_x(game, delta_time)
         self.colli_x(game.carte.tiles_ground)
         self.mov_y(delta_time)
         self.colli_y(game.carte.tiles_ground)
 
-    #function that calculates the x & y coordinates of the player
+    # function that calculates the x & y coordinates of the player
 
     def mov_x(self, game, delta_time):
         self.acceleration.x = 0
         if (pygame.key.get_pressed()[pygame.K_RIGHT]) and (self.acceleration.x < 8):
             self.acceleration.x += 0.6
+            self.IsmovingRight = True
+            self.IsmovingLeft = False
 
-        if (pygame.key.get_pressed()[pygame.K_LEFT]) and (self.acceleration.x > -8):
+        elif (pygame.key.get_pressed()[pygame.K_LEFT]) and (self.acceleration.x > -8):
             self.acceleration.x -= 0.6
+            self.IsmovingRight = False
+            self.IsmovingLeft = True
+        else:
+            self.IsmovingRight = False
+            self.IsmovingLeft = False
+            self.stepIndex = 0
 
         self.acceleration.x += self.velocity.x * game.friction
         self.velocity.x += self.acceleration.x * delta_time
@@ -58,7 +82,7 @@ class Player(pygame.sprite.Sprite):
         self.position.y += self.velocity.y * delta_time + self.acceleration.y / 2 * delta_time ** 2
         self.rect.bottom = self.position.y
 
-    #functions that rectfies the position in case of a collision
+    # functions that rectfies the position in case of a collision
 
     def colli_x(self, obj_list):
         collision = self.get_hit(obj_list)
@@ -97,4 +121,3 @@ class Player(pygame.sprite.Sprite):
                 hit_list.append(element)
 
         return hit_list
-

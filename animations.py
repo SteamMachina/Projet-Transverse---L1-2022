@@ -26,6 +26,23 @@ right = [pygame.image.load('old_assets/player_walking_frames/right/walk1.png'),
          pygame.image.load('old_assets/player_walking_frames/right/walk8.png'),
          pygame.image.load('old_assets/player_walking_frames/right/walk8.png')]
 
+right_rest = [pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest1.png'),
+         pygame.image.load('old_assets/player_resting_frames/rest2.png')]
+
 left = [pygame.image.load('old_assets/player_walking_frames/left/walk1.png'),
         pygame.image.load('old_assets/player_walking_frames/left/walk1.png'),
         pygame.image.load('old_assets/player_walking_frames/left/walk2.png'),

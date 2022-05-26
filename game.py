@@ -1,4 +1,5 @@
 from level import Level
+from menu import Menu
 from player import Player
 from settings import *
 
@@ -8,6 +9,8 @@ class Game:
         super().__init__()
         self.carte = Level()
         self.joueur = Player()
+        self.menu = Menu()
+        self.pressed = {}
         self.ecran = pygame.display.set_mode((screen_width, screen_height))
 
         self.gravity = -0.4

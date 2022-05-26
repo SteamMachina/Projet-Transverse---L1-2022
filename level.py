@@ -5,7 +5,7 @@ import pytmx
 class Level:
 
     def __init__(self):
-        self.tmx_file = pytmx.util_pygame.load_pygame('lvl1.tmx')
+        self.tmx_file = pytmx.util_pygame.load_pygame('assets/levels/lvl1.tmx')
         self.tiles_ground = []
         self.image_ground = {
             "images" : [],
