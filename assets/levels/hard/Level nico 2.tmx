@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.8" tiledversion="1.8.4" orientation="orthogonal" renderorder="right-down" width="36" height="24" tilewidth="30" tileheight="30" infinite="0" nextlayerid="8" nextobjectid="124">
- <tileset firstgid="1" source="../Tiled/asset.tsx"/>
+<map version="1.8" tiledversion="1.8.2" orientation="orthogonal" renderorder="right-down" width="36" height="24" tilewidth="30" tileheight="30" infinite="0" nextlayerid="8" nextobjectid="124">
+ <tileset firstgid="1" source="../../Tiled/asset.tsx"/>
  <layer id="4" name="Sol" width="36" height="24">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

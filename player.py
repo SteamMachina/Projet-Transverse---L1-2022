@@ -1,4 +1,6 @@
 import pygame
+import animations
+import time
 
 
 class Player():
@@ -22,18 +24,14 @@ class Player():
         # Boolean that will indicate if the player is currently moving right or left
         self.IsmovingRight = False
         self.IsmovingLeft = False
+        self.last_side = "right"
 
         self.jump = False
         self.on_ground = False
 
-        #self.stepIndex = 0
+        self.stepIndex = 0
 
-    def move_right(self, velocity):
-        # vitesse du joueur
-        self.yoke_rect.x += velocity
-
-    def move_left(self, velocity):
-        self.yoke_rect.x -= velocity
+    '''-----------------------------Collision and movements-related functions---------------------------------'''
 
     # main function that calls the others
     def movements(self, game, delta_time):
@@ -55,6 +53,7 @@ class Player():
             self.acceleration.x -= 0.6
             self.IsmovingRight = False
             self.IsmovingLeft = True
+
         else:
             self.IsmovingRight = False
             self.IsmovingLeft = False
@@ -121,3 +120,40 @@ class Player():
                 hit_list.append(element)
 
         return hit_list
+
+    '''------------------------------------------ Animations-related functions -----------------------------------------------'''
+
+    def animation(self):
+        image = animations.right_rest[0]
+
+        if self.stepIndex >= 16:
+            self.stepIndex = 0
+
+        #elif self.on_ground is False:
+            # needs to be completed
+
+
+        # If player goes right, we go through the right list walking frames
+        elif self.IsmovingRight:
+            image = animations.right[self.stepIndex]
+            self.stepIndex += 1
+            self.last_side = "right"
+            time.sleep(0.01)
+
+        # If player goes right, we go through the left list walking frames
+        elif self.IsmovingLeft:
+            image = animations.left[self.stepIndex]
+            self.stepIndex += 1
+            self.last_side = "left"
+            time.sleep(0.01)
+
+        # If the player neither goes left or right, we just apply the stationary frame to it
+        else:
+            if self.last_side == "right":
+                image = animations.right_rest[self.stepIndex]
+                self.stepIndex += 1
+                time.sleep(0.08)
+            else:
+                image = animations.right_rest[self.stepIndex]
+
+        return image
