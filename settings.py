@@ -29,7 +29,8 @@ game_logo = pygame.image.load('assets/menu/logo.png')
 side_left_bg_starter_menu = pygame.image.load('old_assets/Levels/niv1_1.png')
 side_right_bg_starter_menu = pygame.image.load('old_assets/Levels/niv2_2.png')
 rules_menu_image = pygame.image.load('assets/menu/Rules.png')
-
+in_game_rules_image = pygame.image.load('assets/menu/InGame_Rules.png')
+in_game_rules_image = pygame.transform.scale(in_game_rules_image, (800, 500))
 
 '''We declare the various buttons use in the game (in starter menu)'''
 start_image_button = pygame.image.load('assets/menu/Play_Button.png')

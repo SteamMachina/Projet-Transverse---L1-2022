@@ -24,6 +24,7 @@ import functions as functions
 '''VARIABLES -------------------------------------------- '''
 running = True
 stepIndex = 0
+number_of_display_ingame_rules = 1
 last_side_that_the_user_went = "right"
 
 '''SOUNDS -------------------------------------------- '''
@@ -43,6 +44,7 @@ paused = False
 # This is the part which allows us to handle the animations
 def draw_game(difficulty, level_number, surface):
     global last_side_that_the_user_went
+    global number_of_display_ingame_rules
     global stepIndex
 
     if difficulty == 'Hard':
@@ -50,6 +52,10 @@ def draw_game(difficulty, level_number, surface):
 
     if difficulty == 'Easy':
         surface.blit(background_easy[level_number], (0, 0))
+
+    if number_of_display_ingame_rules == 1 :
+        functions.in_game_rule_display(screen, True)
+        number_of_display_ingame_rules -= 1
 
     # If the player already went through all 8 walking frames, we reset it to 0
     if stepIndex >= 16:
@@ -194,7 +200,7 @@ while running:
                     and not paused
             ):
                 paused = True
-                paused = functions.pause_function(paused)
+                paused = functions.pause_function(paused,screen)
 
         elif event.type == pygame.KEYUP:
             game.pressed[event.key] = False

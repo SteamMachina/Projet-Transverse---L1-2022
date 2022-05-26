@@ -26,6 +26,18 @@ def Add_text_to_screen(msg, color, x, y, size,surface):
     text = font.render(msg, True, color)
     surface.blit(text, (x, y))
 
+def in_game_rule_display(screen,ingamerules = True):
+    while ingamerules:
+        for event in pygame.event.get():
+            # event is closing of window
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
+                ingamerules = False
+        screen.blit(settings.in_game_rules_image, (150, 100))
+        pygame.display.update()
+        clock.tick(5)
 
 def pause_function(paused,surface):
     while paused:
