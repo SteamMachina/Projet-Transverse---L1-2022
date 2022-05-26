@@ -9,6 +9,7 @@ class Menu:
         self.credits_menu = False
         self.difficulty_menu = False
         self.exit_menu = False
+        self.return_menu = False
         self.should_starter_menu_appear = True
         self.level_difficulty = "Nothing"
 
