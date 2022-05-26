@@ -39,6 +39,20 @@ def in_game_rule_display(screen,ingamerules = True):
         pygame.display.update()
         clock.tick(5)
 
+def game_over(surface,main_menu):
+    while main_menu == False :
+        for event in pygame.event.get():
+            # event is closing of window
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_q:
+                main_menu = True
+    surface.blit(settings.game_over_image, (0, 0))
+    pygame.display.update()
+    clock.tick(5)
+    return main_menu
+
 def pause_function(paused,surface):
     while paused:
         for event in pygame.event.get():
